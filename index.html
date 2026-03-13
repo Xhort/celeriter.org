@@ -1,11 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tech Portfolio</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    Hello world
+
+<header class="navbar">
+
+<div class="logo">TECH.PORT</div>
+
+<nav>
+<ul class="nav-links">
+<li><a href="#">Home</a></li>
+<li><a href="#about">About</a></li>
+<li><a href="#contact">Contact</a></li>
+<li><a href="page2.html">Page 2</a></li>
+<li><a href="page3.html">Page 3</a></li>
+</ul>
+</nav>
+
+<div class="menu-toggle" id="menuToggle">
+<span></span>
+<span></span>
+<span></span>
+</div>
+
+</header>
+
+<section class="hero">
+
+<div class="hero-content">
+
+<h1 class="glow">Future Tech Portfolio</h1>
+
+<p>Cybersecurity • AI • Engineering</p>
+
+<a href="#about" class="cta">Explore</a>
+
+</div>
+
+</section>
+
+<section id="about" class="section">
+
+<h2>About</h2>
+
+<div class="about-grid">
+
+<div>
+<p>
+Developer focused on cybersecurity, AI tools, and systems engineering.
+</p>
+</div>
+
+<div>
+<img src="images/profile.jpg">
+</div>
+
+</div>
+
+</section>
+
+<section class="section projects">
+
+<h2>Projects</h2>
+
+<div class="project-grid">
+
+<div class="card">
+<img src="images/project1.jpg">
+<h3>AI Scanner</h3>
+<p>Automated vulnerability detection.</p>
+</div>
+
+<div class="card">
+<img src="images/project2.jpg">
+<h3>Cyber Sandbox</h3>
+<p>Attack simulation environment.</p>
+</div>
+
+<div class="card">
+<img src="images/project3.jpg">
+<h3>Data Dashboard</h3>
+<p>Interactive analytics system.</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="contact" class="section">
+
+<h2>Contact</h2>
+
+<form class="contact-form">
+
+<input type="text" placeholder="Name">
+
+<input type="email" placeholder="Email">
+
+<textarea placeholder="Message"></textarea>
+
+<button type="submit">Send</button>
+
+</form>
+
+</section>
+
+<footer>
+
+<p>© 2026 Portfolio</p>
+
+</footer>
+
+<script src="script.js"></script>
+
 </body>
 </html>
