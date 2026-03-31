@@ -1,127 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Kaleb Calhoun portfolio website featuring photography, achievements, skills, and contact information."
+    />
+    <title>Kaleb Calhoun | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
 
-<title>Tech Portfolio</title>
+    <div class="page-bg" aria-hidden="true">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="grid-overlay"></div>
+    </div>
 
-<link rel="stylesheet" href="styles.css">
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a href="#hero" class="brand" aria-label="Go to homepage">
+          <span class="brand-badge">KC</span>
+          <span>
+            <span class="brand-top">Portfolio</span>
+            <span class="brand-name">Kaleb Calhoun</span>
+          </span>
+        </a>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+        <nav class="desktop-nav" aria-label="Primary navigation">
+          <button class="tab-link active" data-tab="about">About</button>
+          <button class="tab-link" data-tab="achievements">Achievements</button>
+          <button class="tab-link" data-tab="gallery">Gallery</button>
+          <button class="tab-link" data-tab="skills">Skills</button>
+          <button class="tab-link" data-tab="contact">Contact</button>
+        </nav>
 
-</head>
-<body>
+        <div class="nav-actions">
+          <button id="theme-toggle" class="icon-btn" aria-label="Toggle dark mode" title="Toggle dark mode">
+            <span class="theme-icon">☀</span>
+          </button>
+          <button id="menu-toggle" class="icon-btn mobile-only" aria-label="Open menu" aria-expanded="false">
+            ☰
+          </button>
+        </div>
+      </div>
 
-<header class="navbar">
+      <div id="mobile-menu" class="mobile-menu container" hidden>
+        <button class="mobile-link active" data-tab="about">About</button>
+        <button class="mobile-link" data-tab="achievements">Achievements</button>
+        <button class="mobile-link" data-tab="gallery">Gallery</button>
+        <button class="mobile-link" data-tab="skills">Skills</button>
+        <button class="mobile-link" data-tab="contact">Contact</button>
+      </div>
+    </header>
 
-<div class="logo">TECH.PORT</div>
+    <main id="main-content">
+      <section id="hero" class="hero section container">
+        <div class="hero-copy glass">
+          <p class="eyebrow">Professional Portfolio</p>
+          <h1>Built for impact, creativity, and clarity.</h1>
+          <p class="hero-text">
+            I’m Kaleb Calhoun — a student, technologist, leader, and photographer building work that blends
+            clean design, strong execution, and meaningful story.
+          </p>
 
-<nav>
-<ul class="nav-links">
-<li><a href="#">Home</a></li>
-<li><a href="#about">About</a></li>
-<li><a href="#contact">Contact</a></li>
-<li><a href="page2.html">Page 2</a></li>
-<li><a href="page3.html">Page 3</a></li>
-</ul>
-</nav>
+          <div class="hero-actions">
+            <button class="primary-btn" data-tab="gallery">View Photography</button>
+            <button class="secondary-btn" data-tab="contact">Contact Me</button>
+          </div>
 
-<div class="menu-toggle" id="menuToggle">
-<span></span>
-<span></span>
-<span></span>
-</div>
+          <div class="stats-grid" aria-label="Highlights">
+            <article>
+              <strong>W&M</strong>
+              <span>Student portfolio</span>
+            </article>
+            <article>
+              <strong>Cyber + STEM</strong>
+              <span>Technical focus</span>
+            </article>
+            <article>
+              <strong>Photography</strong>
+              <span>Creative visual work</span>
+            </article>
+          </div>
+        </div>
 
-</header>
+        <aside class="hero-panel glass" aria-label="Featured profile details">
+          <div class="panel-chip">Accessible • Responsive • Modern</div>
+          <h2>Why this site stands out</h2>
+          <ul class="feature-list">
+            <li>Fast tab-based navigation with keyboard-friendly controls</li>
+            <li>Light and dark mode built in</li>
+            <li>Portfolio sections for achievements, photography, and contact</li>
+            <li>Professional visual design with layered gradients and glass effects</li>
+          </ul>
+        </aside>
+      </section>
 
-<section class="hero">
+      <section class="section container tab-panel active" id="about" tabindex="0">
+        <div class="section-heading">
+          <p class="eyebrow">About</p>
+          <h2>About Me</h2>
+          <p>
+            I care about building things that are polished, useful, and memorable. My work sits at the
+            intersection of technology, accessibility, leadership, and visual storytelling.
+          </p>
+        </div>
 
-<div class="hero-content">
+        <div class="card-grid three-col">
+          <article class="glass info-card">
+            <h3>Student</h3>
+            <p>Growing at William &amp; Mary while sharpening technical, academic, and leadership skills.</p>
+          </article>
+          <article class="glass info-card">
+            <h3>Technologist</h3>
+            <p>Focused on cybersecurity, systems thinking, web development, and practical problem solving.</p>
+          </article>
+          <article class="glass info-card">
+            <h3>Photographer</h3>
+            <p>Using composition, light, and timing to turn ordinary moments into strong visual stories.</p>
+          </article>
+        </div>
+      </section>
 
-<h1 class="glow">Future Tech Portfolio</h1>
+      <section class="section container tab-panel" id="achievements" tabindex="0">
+        <div class="section-heading">
+          <p class="eyebrow">Recognition</p>
+          <h2>Achievements</h2>
+          <p>Selected milestones that reflect leadership, initiative, technical growth, and service.</p>
+        </div>
 
-<p>Cybersecurity • AI • Engineering</p>
+        <div class="timeline">
+          <article class="glass timeline-item">
+            <span class="timeline-year">2024</span>
+            <h3>VRA Collaborations Conference Speaker</h3>
+            <p>Invited to speak and represent leadership, communication, and technical impact.</p>
+          </article>
+          <article class="glass timeline-item">
+            <span class="timeline-year">2024</span>
+            <h3>DBVI Emerging Leader Award</h3>
+            <p>Recognized for mentoring, initiative, and service-driven leadership.</p>
+          </article>
+          <article class="glass timeline-item">
+            <span class="timeline-year">Ongoing</span>
+            <h3>Photography Portfolio Growth</h3>
+            <p>Expanding a body of work centered on storytelling, composition, and creative precision.</p>
+          </article>
+          <article class="glass timeline-item">
+            <span class="timeline-year">Ongoing</span>
+            <h3>Technical Development</h3>
+            <p>Deepening skill across Python, Linux, web technologies, accessibility, and security.</p>
+          </article>
+        </div>
+      </section>
 
-<a href="#about" class="cta">Explore</a>
+      <section class="section container tab-panel" id="gallery" tabindex="0">
+        <div class="section-heading">
+          <p class="eyebrow">Photography</p>
+          <h2>Photo Gallery</h2>
+          <p>Swap these placeholders with your own work to turn this into a polished photography portfolio.</p>
+        </div>
 
-</div>
+        <div class="gallery-grid">
+          <article class="gallery-card glass">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80" alt="Portrait photography sample" />
+            <div class="gallery-copy">
+              <h3>Golden Hour Portraits</h3>
+              <p>Portrait</p>
+            </div>
+          </article>
+          <article class="gallery-card glass">
+            <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80" alt="City lights photography sample" />
+            <div class="gallery-copy">
+              <h3>City Lights</h3>
+              <p>Urban</p>
+            </div>
+          </article>
+          <article class="gallery-card glass">
+            <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80" alt="Street photography sample" />
+            <div class="gallery-copy">
+              <h3>Motion and Silence</h3>
+              <p>Street</p>
+            </div>
+          </article>
+          <article class="gallery-card glass">
+            <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80" alt="Landscape photography sample" />
+            <div class="gallery-copy">
+              <h3>Nature Study</h3>
+              <p>Landscape</p>
+            </div>
+          </article>
+          <article class="gallery-card glass">
+            <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1200&q=80" alt="Architecture photography sample" />
+            <div class="gallery-copy">
+              <h3>Architecture Lines</h3>
+              <p>Design</p>
+            </div>
+          </article>
+          <article class="gallery-card glass">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80" alt="Storytelling photography sample" />
+            <div class="gallery-copy">
+              <h3>Quiet Focus</h3>
+              <p>Storytelling</p>
+            </div>
+          </article>
+        </div>
+      </section>
 
-</section>
+      <section class="section container tab-panel" id="skills" tabindex="0">
+        <div class="section-heading">
+          <p class="eyebrow">Strengths</p>
+          <h2>Skills</h2>
+          <p>A mix of technical, creative, and leadership abilities that support both problem solving and presentation.</p>
+        </div>
 
-<section id="about" class="section">
+        <div class="skills-wrap glass">
+          <span class="skill-pill">Python</span>
+          <span class="skill-pill">Linux</span>
+          <span class="skill-pill">Web Development</span>
+          <span class="skill-pill">Cybersecurity</span>
+          <span class="skill-pill">Accessibility</span>
+          <span class="skill-pill">Photography</span>
+          <span class="skill-pill">Leadership</span>
+          <span class="skill-pill">Public Speaking</span>
+          <span class="skill-pill">Creative Direction</span>
+          <span class="skill-pill">Problem Solving</span>
+        </div>
+      </section>
 
-<h2>About</h2>
+      <section class="section container tab-panel" id="contact" tabindex="0">
+        <div class="section-heading">
+          <p class="eyebrow">Connect</p>
+          <h2>Contact</h2>
+          <p>Use this section for networking, opportunities, collaborations, photography inquiries, or freelance work.</p>
+        </div>
 
-<div class="about-grid">
+        <div class="card-grid two-col">
+          <article class="glass info-card">
+            <h3>Email</h3>
+            <p>yourname@email.com</p>
+          </article>
+          <article class="glass info-card">
+            <h3>LinkedIn / GitHub</h3>
+            <p>Add your professional links here.</p>
+          </article>
+        </div>
+      </section>
+    </main>
 
-<div>
-<p>
-Developer focused on cybersecurity, AI tools, and systems engineering.
-</p>
-</div>
+    <footer class="site-footer container">
+      <p>© 2026 Kaleb Calhoun. Built for performance, accessibility, and polish.</p>
+    </footer>
 
-<div>
-<img src="images/profile.jpg">
-</div>
-
-</div>
-
-</section>
-
-<section class="section projects">
-
-<h2>Projects</h2>
-
-<div class="project-grid">
-
-<div class="card">
-<img src="images/project1.jpg">
-<h3>AI Scanner</h3>
-<p>Automated vulnerability detection.</p>
-</div>
-
-<div class="card">
-<img src="images/project2.jpg">
-<h3>Cyber Sandbox</h3>
-<p>Attack simulation environment.</p>
-</div>
-
-<div class="card">
-<img src="images/project3.jpg">
-<h3>Data Dashboard</h3>
-<p>Interactive analytics system.</p>
-</div>
-
-</div>
-
-</section>
-
-<section id="contact" class="section">
-
-<h2>Contact</h2>
-
-<form class="contact-form">
-
-<input type="text" placeholder="Name">
-
-<input type="email" placeholder="Email">
-
-<textarea placeholder="Message"></textarea>
-
-<button type="submit">Send</button>
-
-</form>
-
-</section>
-
-<footer>
-
-<p>© 2026 Portfolio</p>
-
-</footer>
-
-<script src="script.js"></script>
-
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
