@@ -14,7 +14,7 @@ const elements = {
 const CONFIG = {
   THEME_KEY: "kaleb-portfolio-theme",
   MOBILE_BREAKPOINT: 900,
-  API_URL: "https://celeriter.org/chat", "http://127.0.0.1:8000/chat",
+  API_URL: "https://celeriter.org/chat",
 };
 
 /* =========================
