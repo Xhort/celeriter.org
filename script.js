@@ -1,162 +1,254 @@
 const body = document.body;
-const themeToggle = document.getElementById("theme-toggle");
-const themeIcon = document.querySelector(".theme-icon");
-const menuToggle = document.getElementById("menu-toggle");
-const mobileMenu = document.getElementById("mobile-menu");
 
-const tabButtons = document.querySelectorAll("[data-tab]");
-const panels = document.querySelectorAll(".tab-panel");
+const elements = {
+  themeToggle: document.getElementById("theme-toggle"),
+  themeIcon: document.querySelector(".theme-icon"),
+  menuToggle: document.getElementById("menu-toggle"),
+  mobileMenu: document.getElementById("mobile-menu"),
+  tabButtons: [...document.querySelectorAll("[data-tab]")],
+  panels: [...document.querySelectorAll(".tab-panel")],
+  chatInput: document.getElementById("chatInput"),
+  chatMessages: document.getElementById("chatMessages")
+};
 
-const THEME_KEY = "kaleb-portfolio-theme";
+const CONFIG = {
+  THEME_KEY: "kaleb-portfolio-theme",
+  MOBILE_BREAKPOINT: 900,
+  API_URL: "https://celeriter.org/chat", "http://127.0.0.1:8000/chat",
+};
+
+/* =========================
+   THEME
+========================= */
 
 function setTheme(theme) {
   const isDark = theme === "dark";
+
   body.classList.toggle("dark", isDark);
 
-  if (themeIcon) {
-    themeIcon.textContent = isDark ? "☀" : "☾";
+  if (elements.themeIcon) {
+    elements.themeIcon.textContent = isDark ? "☀" : "☾";
   }
 
-  if (themeToggle) {
-    themeToggle.setAttribute(
-      "aria-label",
-      isDark ? "Switch to light mode" : "Switch to dark mode"
-    );
-    themeToggle.setAttribute(
-      "title",
-      isDark ? "Switch to light mode" : "Switch to dark mode"
-    );
+  if (elements.themeToggle) {
+    const label = isDark
+      ? "Switch to light mode"
+      : "Switch to dark mode";
+
+    elements.themeToggle.setAttribute("aria-label", label);
+    elements.themeToggle.setAttribute("title", label);
   }
 
-  localStorage.setItem(THEME_KEY, theme);
+  localStorage.setItem(CONFIG.THEME_KEY, theme);
 }
 
 function getSavedTheme() {
-  const saved = localStorage.getItem(THEME_KEY);
-  if (saved === "light" || saved === "dark") return saved;
+  const saved = localStorage.getItem(CONFIG.THEME_KEY);
 
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  return prefersDark ? "dark" : "light";
+  if (saved === "light" || saved === "dark") {
+    return saved;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 }
+
+/* =========================
+   TABS
+========================= */
 
 function setActiveTab(tabId, moveFocus = true) {
   if (!tabId) return;
 
-  tabButtons.forEach((button) => {
-    const isActive = button.dataset.tab === tabId;
-    button.classList.toggle("active", isActive);
-    button.setAttribute("aria-selected", isActive ? "true" : "false");
+  elements.tabButtons.forEach((button) => {
+    const active = button.dataset.tab === tabId;
+
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", active);
   });
 
-  panels.forEach((panel) => {
-    const isActive = panel.id === tabId;
-    panel.classList.toggle("active", isActive);
-    panel.setAttribute("aria-hidden", isActive ? "false" : "true");
+  elements.panels.forEach((panel) => {
+    const active = panel.id === tabId;
 
-    if (isActive && moveFocus) {
+    panel.classList.toggle("active", active);
+    panel.setAttribute("aria-hidden", !active);
+
+    if (active && moveFocus) {
       panel.focus();
     }
   });
 }
 
-function closeMobileMenu() {
-  if (!mobileMenu || !menuToggle) return;
-  mobileMenu.classList.remove("open");
-  mobileMenu.hidden = true;
-  menuToggle.setAttribute("aria-expanded", "false");
-  menuToggle.setAttribute("aria-label", "Open menu");
-  menuToggle.textContent = "☰";
-}
+/* =========================
+   MOBILE MENU
+========================= */
 
-function openMobileMenu() {
-  if (!mobileMenu || !menuToggle) return;
-  mobileMenu.hidden = false;
-  mobileMenu.classList.add("open");
-  menuToggle.setAttribute("aria-expanded", "true");
-  menuToggle.setAttribute("aria-label", "Close menu");
-  menuToggle.textContent = "✕";
-}
+function setMobileMenu(open) {
+  const { mobileMenu, menuToggle } = elements;
 
-function toggleMobileMenu() {
-  if (!mobileMenu) return;
-  const isOpen = mobileMenu.classList.contains("open");
-  if (isOpen) {
-    closeMobileMenu();
+  if (!mobileMenu || !menuToggle) return;
+
+  mobileMenu.classList.toggle("open", open);
+  mobileMenu.hidden = !open;
+
+  menuToggle.setAttribute("aria-expanded", open);
+
+  if (open) {
+    menuToggle.setAttribute("aria-label", "Close menu");
+    menuToggle.textContent = "✕";
   } else {
-    openMobileMenu();
+    menuToggle.setAttribute("aria-label", "Open menu");
+    menuToggle.textContent = "☰";
   }
 }
 
-if (themeToggle) {
+/* =========================
+   CHATBOT
+========================= */
+
+function appendMessage(type, text) {
+  const message = document.createElement("div");
+
+  message.className = `${type}-message message`;
+  message.textContent = text;
+
+  elements.chatMessages.appendChild(message);
+  elements.chatMessages.scrollTop =
+    elements.chatMessages.scrollHeight;
+}
+
+async function sendChatMessage() {
+  const input = elements.chatInput;
+  const userText = input.value.trim();
+
+  if (!userText) return;
+
+  appendMessage("user", userText);
+
+  input.value = "";
+
+  try {
+    const response = await fetch(CONFIG.API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: userText
+      })
+    });
+
+    const data = await response.json();
+
+    appendMessage("bot", data.reply);
+
+  } catch (error) {
+    appendMessage("bot", "Backend is not connected.");
+  }
+}
+
+/* =========================
+   EVENT LISTENERS
+========================= */
+
+if (elements.themeToggle) {
   setTheme(getSavedTheme());
 
-  themeToggle.addEventListener("click", () => {
-    const nextTheme = body.classList.contains("dark") ? "light" : "dark";
+  elements.themeToggle.addEventListener("click", () => {
+    const nextTheme = body.classList.contains("dark")
+      ? "light"
+      : "dark";
+
     setTheme(nextTheme);
   });
 }
 
-if (menuToggle) {
-  menuToggle.addEventListener("click", toggleMobileMenu);
+if (elements.menuToggle) {
+  elements.menuToggle.addEventListener("click", () => {
+    const isOpen =
+      elements.mobileMenu.classList.contains("open");
+
+    setMobileMenu(!isOpen);
+  });
 }
 
-tabButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const tabId = button.dataset.tab;
-    setActiveTab(tabId);
+elements.tabButtons.forEach((button, index) => {
 
-    if (window.innerWidth <= 900) {
-      closeMobileMenu();
+  button.addEventListener("click", () => {
+    setActiveTab(button.dataset.tab);
+
+    if (window.innerWidth <= CONFIG.MOBILE_BREAKPOINT) {
+      setMobileMenu(false);
     }
   });
 
   button.addEventListener("keydown", (event) => {
-    const currentIndex = Array.from(tabButtons).indexOf(button);
-    let nextIndex = currentIndex;
 
-    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+    let nextIndex = index;
+
+    if (
+      event.key === "ArrowRight" ||
+      event.key === "ArrowDown"
+    ) {
       event.preventDefault();
-      nextIndex = (currentIndex + 1) % tabButtons.length;
-      tabButtons[nextIndex].focus();
+      nextIndex =
+        (index + 1) % elements.tabButtons.length;
     }
 
-    if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+    if (
+      event.key === "ArrowLeft" ||
+      event.key === "ArrowUp"
+    ) {
       event.preventDefault();
-      nextIndex = (currentIndex - 1 + tabButtons.length) % tabButtons.length;
-      tabButtons[nextIndex].focus();
+      nextIndex =
+        (index - 1 + elements.tabButtons.length) %
+        elements.tabButtons.length;
     }
 
-    if (event.key === "Enter" || event.key === " ") {
+    if (
+      event.key === "Enter" ||
+      event.key === " "
+    ) {
       event.preventDefault();
       button.click();
+      return;
     }
+
+    elements.tabButtons[nextIndex].focus();
   });
 });
 
 window.addEventListener("resize", () => {
-  if (window.innerWidth > 900) {
-    closeMobileMenu();
+  if (window.innerWidth > CONFIG.MOBILE_BREAKPOINT) {
+    setMobileMenu(false);
   }
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  panels.forEach((panel) => {
+
+  elements.panels.forEach((panel) => {
     panel.setAttribute("tabindex", "0");
   });
 
-  tabButtons.forEach((button) => {
+  elements.tabButtons.forEach((button) => {
     button.setAttribute("role", "tab");
-    button.setAttribute("aria-selected", button.classList.contains("active") ? "true" : "false");
   });
 
   const activePanel =
-    document.querySelector(".tab-panel.active") || document.getElementById("about");
+    document.querySelector(".tab-panel.active") ||
+    document.getElementById("about");
 
-  if (activePanel) {
-    setActiveTab(activePanel.id, false);
-  } else {
-    setActiveTab("about", false);
+  setActiveTab(activePanel?.id || "about", false);
+
+  setMobileMenu(false);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "Enter" &&
+    document.activeElement.id === "chatInput"
+  ) {
+    sendChatMessage();
   }
-
-  closeMobileMenu();
 });

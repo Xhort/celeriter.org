@@ -36,11 +36,12 @@
           </span>
         </a>
 
-        <nav class="desktop-nav" aria-label="Primary navigation">
+        <nav class="desktop-nav" aria-label="Primary navigation">         
           <button class="tab-link active" data-tab="about">About</button>
           <button class="tab-link" data-tab="achievements">Achievements</button>
           <button class="tab-link" data-tab="gallery">Gallery</button>
           <button class="tab-link" data-tab="skills">Skills</button>
+          <button class="tab-link" data-tab="chatbot">Chatbot</button>
           <button class="tab-link" data-tab="contact">Contact</button>
         </nav>
 
@@ -59,6 +60,7 @@
         <button class="mobile-link" data-tab="achievements">Achievements</button>
         <button class="mobile-link" data-tab="gallery">Gallery</button>
         <button class="mobile-link" data-tab="skills">Skills</button>
+        <button class="mobile-link" data-tab="chatbot">Chatbot</button>
         <button class="mobile-link" data-tab="contact">Contact</button>
       </div>
     </header>
@@ -169,53 +171,37 @@
           <h2>Photo Gallery</h2>
           <p>Swap these placeholders with your own work to turn this into a polished photography portfolio.</p>
         </div>
-
-        <div class="gallery-grid">
-          <article class="gallery-card glass">
-            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80" alt="Portrait photography sample" />
-            <div class="gallery-copy">
-              <h3>Golden Hour Portraits</h3>
-              <p>Portrait</p>
-            </div>
-          </article>
-          <article class="gallery-card glass">
-            <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80" alt="City lights photography sample" />
-            <div class="gallery-copy">
-              <h3>City Lights</h3>
-              <p>Urban</p>
-            </div>
-          </article>
-          <article class="gallery-card glass">
-            <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80" alt="Street photography sample" />
-            <div class="gallery-copy">
-              <h3>Motion and Silence</h3>
-              <p>Street</p>
-            </div>
-          </article>
-          <article class="gallery-card glass">
-            <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80" alt="Landscape photography sample" />
-            <div class="gallery-copy">
-              <h3>Nature Study</h3>
-              <p>Landscape</p>
-            </div>
-          </article>
-          <article class="gallery-card glass">
-            <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1200&q=80" alt="Architecture photography sample" />
-            <div class="gallery-copy">
-              <h3>Architecture Lines</h3>
-              <p>Design</p>
-            </div>
-          </article>
-          <article class="gallery-card glass">
-            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80" alt="Storytelling photography sample" />
-            <div class="gallery-copy">
-              <h3>Quiet Focus</h3>
-              <p>Storytelling</p>
-            </div>
-          </article>
-        </div>
       </section>
 
+
+      <section class="section container tab-panel" id="chatbot" tabindex="0">
+        <div class="section-heading">
+          <p class="eyebrow">AI Project</p>
+            <h2>Chatbot Demo</h2>
+          <p>Talk with a Python-powered chatbot connected through a FastAPI backend.</p>
+        </div>
+
+        <div class="chatbot-card glass">
+          <div class="chatbot-header">
+            <div class="bot-avatar">AI</div>
+              <div>
+                <h3>Celeriter Chatbot</h3>
+                <p>Python backend • FastAPI • Live response</p>
+            </div>
+        </div>
+
+          <div id="chatMessages" class="chat-messages">
+            <div class="bot-message message">
+              Hello, I’m your chatbot. Ask me something.
+            </div>
+          </div>
+
+          <div class="chat-input-row">
+            <input id="chatInput" type="text" placeholder="Type your message..." />
+            <button onclick="sendChatMessage()">Send</button>
+          </div>
+        </div>
+      </section>
       <section class="section container tab-panel" id="skills" tabindex="0">
         <div class="section-heading">
           <p class="eyebrow">Strengths</p>
