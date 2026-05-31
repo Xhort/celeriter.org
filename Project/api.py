@@ -3,11 +3,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from chatbot import get_bot_response
 
+
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500", "https://celeriter.org"],
+    allow_origins=[ 
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "https://celeriter.org",
+    "https://www.celeriter.org",
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )

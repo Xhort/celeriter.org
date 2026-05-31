@@ -1,40 +1,53 @@
-const body = document.body;
-
-const elements = {
-  themeToggle: document.getElementById("theme-toggle"),
-  themeIcon: document.querySelector(".theme-icon"),
-  menuToggle: document.getElementById("menu-toggle"),
-  mobileMenu: document.getElementById("mobile-menu"),
-  tabButtons: [...document.querySelectorAll("[data-tab]")],
-  panels: [...document.querySelectorAll(".tab-panel")],
-  chatInput: document.getElementById("chatInput"),
-  chatMessages: document.getElementById("chatMessages")
-};
-
 const CONFIG = {
   THEME_KEY: "kaleb-portfolio-theme",
   MOBILE_BREAKPOINT: 900,
-  API_URL: "https://celeriter.org/chat",
+  LOCAL_API_URL: "http://127.0.0.1:8000/chat",
+  LIVE_API_URL: "https://chatbot-api.celeriter.org/chat",
+  REQUEST_TIMEOUT_MS: 10000
 };
 
-/* =========================
-   THEME
-========================= */
+const SELECTORS = {
+  themeToggle: "#theme-toggle",
+  themeIcon: ".theme-icon",
+  menuToggle: "#menu-toggle",
+  mobileMenu: "#mobile-menu",
+  tabButton: "[data-tab]",
+  panel: ".tab-panel",
+  chatInput: "#chatInput",
+  chatMessages: "#chatMessages",
+  sendChatButton: "#sendChatButton"
+};
+
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => [...document.querySelectorAll(selector)];
+
+const elements = {
+  body: document.body,
+  themeToggle: $(SELECTORS.themeToggle),
+  themeIcon: $(SELECTORS.themeIcon),
+  menuToggle: $(SELECTORS.menuToggle),
+  mobileMenu: $(SELECTORS.mobileMenu),
+  tabButtons: $$(SELECTORS.tabButton),
+  panels: $$(SELECTORS.panel),
+  chatInput: $(SELECTORS.chatInput),
+  chatMessages: $(SELECTORS.chatMessages),
+  sendChatButton: $(SELECTORS.sendChatButton)
+};
+
+const isLocalSite = ["127.0.0.1", "localhost"].includes(window.location.hostname);
+const API_URL = isLocalSite ? CONFIG.LOCAL_API_URL : CONFIG.LIVE_API_URL;
 
 function setTheme(theme) {
   const isDark = theme === "dark";
+  const label = isDark ? "Switch to light mode" : "Switch to dark mode";
 
-  body.classList.toggle("dark", isDark);
+  elements.body.classList.toggle("dark", isDark);
 
   if (elements.themeIcon) {
     elements.themeIcon.textContent = isDark ? "☀" : "☾";
   }
 
   if (elements.themeToggle) {
-    const label = isDark
-      ? "Switch to light mode"
-      : "Switch to dark mode";
-
     elements.themeToggle.setAttribute("aria-label", label);
     elements.themeToggle.setAttribute("title", label);
   }
@@ -45,7 +58,7 @@ function setTheme(theme) {
 function getSavedTheme() {
   const saved = localStorage.getItem(CONFIG.THEME_KEY);
 
-  if (saved === "light" || saved === "dark") {
+  if (["light", "dark"].includes(saved)) {
     return saved;
   }
 
@@ -54,109 +67,144 @@ function getSavedTheme() {
     : "light";
 }
 
-/* =========================
-   TABS
-========================= */
-
 function setActiveTab(tabId, moveFocus = true) {
   if (!tabId) return;
 
   elements.tabButtons.forEach((button) => {
-    const active = button.dataset.tab === tabId;
+    const isActive = button.dataset.tab === tabId;
 
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-selected", active);
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
   });
 
   elements.panels.forEach((panel) => {
-    const active = panel.id === tabId;
+    const isActive = panel.id === tabId;
 
-    panel.classList.toggle("active", active);
-    panel.setAttribute("aria-hidden", !active);
+    panel.classList.toggle("active", isActive);
+    panel.setAttribute("aria-hidden", String(!isActive));
 
-    if (active && moveFocus) {
+    if (isActive && moveFocus) {
       panel.focus();
     }
   });
 }
-
-/* =========================
-   MOBILE MENU
-========================= */
 
 function setMobileMenu(open) {
   const { mobileMenu, menuToggle } = elements;
 
   if (!mobileMenu || !menuToggle) return;
 
-  mobileMenu.classList.toggle("open", open);
   mobileMenu.hidden = !open;
-
-  menuToggle.setAttribute("aria-expanded", open);
-
-  if (open) {
-    menuToggle.setAttribute("aria-label", "Close menu");
-    menuToggle.textContent = "✕";
-  } else {
-    menuToggle.setAttribute("aria-label", "Open menu");
-    menuToggle.textContent = "☰";
-  }
+  mobileMenu.classList.toggle("open", open);
+  menuToggle.setAttribute("aria-expanded", String(open));
+  menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  menuToggle.textContent = open ? "✕" : "☰";
 }
 
-/* =========================
-   CHATBOT
-========================= */
-
 function appendMessage(type, text) {
+  if (!elements.chatMessages) return;
+
   const message = document.createElement("div");
 
   message.className = `${type}-message message`;
   message.textContent = text;
 
   elements.chatMessages.appendChild(message);
-  elements.chatMessages.scrollTop =
-    elements.chatMessages.scrollHeight;
+  elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
 }
 
-async function sendChatMessage() {
-  const input = elements.chatInput;
-  const userText = input.value.trim();
-
-  if (!userText) return;
-
-  appendMessage("user", userText);
-
-  input.value = "";
+async function postChatMessage(message) {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(
+    () => controller.abort(),
+    CONFIG.REQUEST_TIMEOUT_MS
+  );
 
   try {
-    const response = await fetch(CONFIG.API_URL, {
+    const response = await fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        message: userText
-      })
+      body: JSON.stringify({ message }),
+      signal: controller.signal
     });
 
-    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`Backend responded with ${response.status}`);
+    }
 
-    appendMessage("bot", data.reply);
-
-  } catch (error) {
-    appendMessage("bot", "Backend is not connected.");
+    return await response.json();
+  } finally {
+    window.clearTimeout(timeoutId);
   }
 }
 
-/* =========================
-   EVENT LISTENERS
-========================= */
+async function sendChatMessage() {
+  const input = elements.chatInput;
+  const button = elements.sendChatButton;
+  const userText = input?.value.trim();
 
-if (elements.themeToggle) {
+  if (!userText) return;
+
+  appendMessage("user", userText);
+  input.value = "";
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Sending...";
+  }
+
+  try {
+    const data = await postChatMessage(userText);
+    appendMessage("bot", data.reply || "No reply received.");
+  } catch (error) {
+    appendMessage(
+      "bot",
+      "I could not reach the chatbot backend. Check that the public API is running."
+    );
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Send";
+    }
+
+    input?.focus();
+  }
+}
+
+function handleTabKeydown(event, index) {
+  const keys = {
+    ArrowRight: 1,
+    ArrowDown: 1,
+    ArrowLeft: -1,
+    ArrowUp: -1
+  };
+
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    event.currentTarget.click();
+    return;
+  }
+
+  if (!(event.key in keys)) return;
+
+  event.preventDefault();
+
+  const nextIndex =
+    (index + keys[event.key] + elements.tabButtons.length) %
+    elements.tabButtons.length;
+
+  elements.tabButtons[nextIndex].focus();
+}
+
+function initTheme() {
+  if (!elements.themeToggle) return;
+
   setTheme(getSavedTheme());
 
   elements.themeToggle.addEventListener("click", () => {
-    const nextTheme = body.classList.contains("dark")
+    const nextTheme = elements.body.classList.contains("dark")
       ? "light"
       : "dark";
 
@@ -164,91 +212,57 @@ if (elements.themeToggle) {
   });
 }
 
-if (elements.menuToggle) {
-  elements.menuToggle.addEventListener("click", () => {
-    const isOpen =
-      elements.mobileMenu.classList.contains("open");
-
-    setMobileMenu(!isOpen);
-  });
-}
-
-elements.tabButtons.forEach((button, index) => {
-
-  button.addEventListener("click", () => {
-    setActiveTab(button.dataset.tab);
-
-    if (window.innerWidth <= CONFIG.MOBILE_BREAKPOINT) {
-      setMobileMenu(false);
-    }
-  });
-
-  button.addEventListener("keydown", (event) => {
-
-    let nextIndex = index;
-
-    if (
-      event.key === "ArrowRight" ||
-      event.key === "ArrowDown"
-    ) {
-      event.preventDefault();
-      nextIndex =
-        (index + 1) % elements.tabButtons.length;
-    }
-
-    if (
-      event.key === "ArrowLeft" ||
-      event.key === "ArrowUp"
-    ) {
-      event.preventDefault();
-      nextIndex =
-        (index - 1 + elements.tabButtons.length) %
-        elements.tabButtons.length;
-    }
-
-    if (
-      event.key === "Enter" ||
-      event.key === " "
-    ) {
-      event.preventDefault();
-      button.click();
-      return;
-    }
-
-    elements.tabButtons[nextIndex].focus();
-  });
-});
-
-window.addEventListener("resize", () => {
-  if (window.innerWidth > CONFIG.MOBILE_BREAKPOINT) {
-    setMobileMenu(false);
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-
+function initNavigation() {
   elements.panels.forEach((panel) => {
     panel.setAttribute("tabindex", "0");
   });
 
-  elements.tabButtons.forEach((button) => {
+  elements.tabButtons.forEach((button, index) => {
     button.setAttribute("role", "tab");
+
+    button.addEventListener("click", () => {
+      setActiveTab(button.dataset.tab);
+
+      if (window.innerWidth <= CONFIG.MOBILE_BREAKPOINT) {
+        setMobileMenu(false);
+      }
+    });
+
+    button.addEventListener("keydown", (event) => {
+      handleTabKeydown(event, index);
+    });
   });
 
-  const activePanel =
-    document.querySelector(".tab-panel.active") ||
-    document.getElementById("about");
+  elements.menuToggle?.addEventListener("click", () => {
+    setMobileMenu(!elements.mobileMenu?.classList.contains("open"));
+  });
 
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > CONFIG.MOBILE_BREAKPOINT) {
+      setMobileMenu(false);
+    }
+  });
+
+  const activePanel = $(".tab-panel.active") || $("#about");
   setActiveTab(activePanel?.id || "about", false);
-
   setMobileMenu(false);
-});
+}
 
-document.addEventListener("keydown", (event) => {
-  if (
-    event.key === "Enter" &&
-    document.activeElement.id === "chatInput"
-  ) {
-    sendChatMessage();
-  }
-});
+function initChatbot() {
+  elements.sendChatButton?.addEventListener("click", sendChatMessage);
+
+  elements.chatInput?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendChatMessage();
+    }
+  });
+}
+
+function init() {
+  initTheme();
+  initNavigation();
+  initChatbot();
+}
+
+init();
