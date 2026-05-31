@@ -2,7 +2,7 @@ const CONFIG = {
   THEME_KEY: "kaleb-portfolio-theme",
   MOBILE_BREAKPOINT: 900,
   LOCAL_API_URL: "http://127.0.0.1:8000/chat",
-  LIVE_API_URL: "https://celeriterorg-production.up.railway.app",
+  LIVE_API_URL: "https://celeriterorg-production.up.railway.app/chat",
   REQUEST_TIMEOUT_MS: 10000
 };
 
